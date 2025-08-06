@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ContentHistoryTable } from "@/features/ContentHistoryTable";
+import { DataTable } from "@/components/features/content/HistoryTable/data-table";
 
 const HistoryPage = () => {
   const [data, setData] = useState([]);
@@ -14,7 +14,7 @@ const HistoryPage = () => {
   return (
     <div className="p-4">
       <h1 className="text-xl font-bold mb-4">Content History</h1>
-      <ContentHistoryTable data={data} />
+      <DataTable data={data} />
     </div>
   );
 };
