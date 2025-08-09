@@ -14,9 +14,11 @@ export class OpenAIGateway implements IAIGateway {
     type: ContentType,
   ): Promise<{ caption: string; hashtags: string[] }> {
     try {
-      const systemPrompt = `You're an Instagram digital marketing specialist.
-Create content in the format ${type === 'POST' ? 'Post' : 'Story'} based on the following theme: "${prompt}".
-Include an engaging caption and a list of 3 to 5 relevant hashtags, separated by commas.`;
+      const systemPrompt = `  
+        You're an Instagram digital marketing specialist.
+        Create content in the format ${type === 'POST' ? 'Post' : 'Story'} based on the following theme: "${prompt}".
+        Include an engaging caption and a list of 3 to 5 relevant hashtags, separated by commas.
+      `;
 
       const response = await axios.post(
         this.apiUrl,

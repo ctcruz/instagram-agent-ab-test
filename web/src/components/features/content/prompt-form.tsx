@@ -27,42 +27,34 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { toast } from "sonner";
+import type { ContentType } from "@/types/content";
 
 const FormSchema = z.object({
   prompt: z
     .string()
     .min(4, "Enter at least 4 characters")
     .max(500, "Max. 500 characters"),
-  type: z.enum(["POST", "STORY"], { required_error: "Select a type" }),
+  type: z.enum<ContentType[]>(["POST", "STORY"], {
+    error: "Select a type",
+  }),
 });
 
 export type PromptFormValues = z.infer<typeof FormSchema>;
 
 export function PromptForm({
-  defaultValues = { prompt: "", type: "" },
   onSubmit,
   submitting = false,
 }: {
-  defaultValues?: PromptFormValues;
   onSubmit: (values: PromptFormValues) => Promise<void> | void;
   submitting?: boolean;
 }) {
   const form = useForm<PromptFormValues>({
     resolver: zodResolver(FormSchema),
-    defaultValues,
     mode: "onChange",
   });
 
   function handleSubmit(data: z.infer<typeof FormSchema>) {
     onSubmit(data);
-    toast("You submitted the following values", {
-      description: (
-        <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
   }
 
   const localSubmitting = submitting || form.formState.isSubmitting;

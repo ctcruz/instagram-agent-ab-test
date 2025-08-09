@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { ContentHistoryTable } from "@/components/features/content/HistoryTable/newtable";
 import { OptionSelectDialog } from "@/components/features/content/option-dialog";
 import {
@@ -6,64 +6,32 @@ import {
   type PromptFormValues,
 } from "@/components/features/content/prompt-form";
 import { toast } from "sonner";
-import { Separator } from "@/components/ui/separator";
-
-type GeneratedContent = {
-  id: string;
-  prompt: string;
-  type: "POST" | "STORY";
-  optionA: { caption: string; hashtags: string[] };
-  optionB: { caption: string; hashtags: string[] };
-  selectedOption: "A" | "B" | null;
-  createdAt: string;
-};
+import { useHistory } from "@/hooks/queries/useContents";
+import { useGenerateContent } from "@/hooks/mutations/useGenerateContent";
+import type { OptionResponse } from "@/types/content";
 
 const HistoryPage = () => {
-  const [data, setData] = useState([]);
-  const [generated, setGenerated] = React.useState<GeneratedContent | null>(
-    null
-  );
-
+  const { data: historyData } = useHistory();
+  const { mutateAsync: generateContent } = useGenerateContent();
+  const [generated, setGenerated] = React.useState<OptionResponse | null>(null);
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [submitting, setSubmitting] = React.useState(false);
 
-  const optionA = { caption: "Legend A…", hashtags: ["#summer", "#skincare"] };
-  const optionB = { caption: "Legend B…", hashtags: ["#sun", "#care"] };
-
   useEffect(() => {
-    fetch("http://localhost:8080/content/history")
-      .then((res) => res.json())
-      .then(setData)
-      .catch(console.error);
-  }, []);
+    console.log("historyData: ", historyData);
+  }, [historyData]);
 
   async function onSubmit(values: PromptFormValues) {
     try {
       setSubmitting(true);
-      // const res = await fetch("/api/content/generate", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(values),
-      // });
-      // if (!res.ok) {
-      //   const text = await res.text().catch(() => "");
-      //   throw new Error(text || `HTTP ${res.status}`);
-      // }
-      // const data: GeneratedContent = await res.json();
+      setDialogOpen(true);
 
-      const data: GeneratedContent = {
-        id: "asdf",
+      const { data: generatedContentData } = await generateContent({
         prompt: values.prompt,
         type: values.type,
-        createdAt: new Date().toISOString(),
-        optionA,
-        optionB,
-        selectedOption: "A",
-      };
+      });
 
-      setGenerated(data);
-      setDialogOpen(true);
-      toast("Generated variations!", { description: "Choose your option." });
+      setGenerated(generatedContentData);
     } catch (err: any) {
       toast("Error when generating", {
         description: err?.message ?? "Try again.",
@@ -77,23 +45,20 @@ const HistoryPage = () => {
     <>
       <div className="max-w-2xl mx-auto pt-6 gap-4 flex flex-col">
         <PromptForm onSubmit={onSubmit} submitting={submitting} />
-        <ContentHistoryTable data={data} />
+        <ContentHistoryTable data={historyData} />
       </div>
 
-      {generated && (
-        <OptionSelectDialog
-          open={dialogOpen}
-          onOpenChange={setDialogOpen}
-          contentId={generated.id}
-          optionA={generated.optionA}
-          optionB={generated.optionB}
-          onSuccess={(selected) => {
-            toast("Registered selection", {
-              description: `Option ${selected} saved successfuly.`,
-            });
-          }}
-        />
-      )}
+      <OptionSelectDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        optionA={generated?.optionA}
+        optionB={generated?.optionB}
+        onSuccess={(selected) => {
+          toast("Registered selection", {
+            description: `Option ${selected} saved successfuly.`,
+          });
+        }}
+      />
     </>
   );
 };

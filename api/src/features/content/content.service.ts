@@ -10,17 +10,17 @@ export class ContentService {
     @Inject('IContentRepository') private readonly repo: IContentRepository,
   ) {}
 
-  async generate(prompt: string, type: ContentType): Promise<Content> {
+  async generate(
+    prompt: string,
+    type: ContentType,
+  ): Promise<{
+    optionA: { caption: string; hashtags: string[] };
+    optionB: { caption: string; hashtags: string[] };
+  }> {
     const optionA = await this.ai.generate(prompt, type);
     const optionB = await this.ai.generate(prompt, type);
 
-    return this.repo.save({
-      prompt,
-      type,
-      optionA,
-      optionB,
-      selectedOption: null,
-    });
+    return { optionA, optionB };
   }
 
   async select(id: string, selected: 'A' | 'B') {

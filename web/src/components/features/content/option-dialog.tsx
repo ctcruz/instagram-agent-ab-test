@@ -1,7 +1,6 @@
 import * as React from "react";
 import {
   Dialog,
-  DialogTrigger,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -12,31 +11,32 @@ import {
 import { Button } from "@/components/ui/button";
 import { OptionCard } from "./option-card";
 import { toast } from "sonner";
+import { OptionCardSkeleton } from "./OptionCardSkeleton";
+import { type SelectedOption, type Option } from "@/types/content";
+import { useSelectOption } from "@/hooks/mutations/useSelectOption";
 
 export function OptionSelectDialog({
-  trigger,
-  contentId,
   optionA,
   optionB,
   open,
   onOpenChange,
-  selectEndpoint = "/api/content/select",
   closeAfterConfirm = true,
   onSuccess,
 }: {
   trigger?: React.ReactNode;
-  contentId: string;
-  optionA: { caption: string; hashtags: string[] };
-  optionB: { caption: string; hashtags: string[] };
+  optionA: Option | undefined;
+  optionB: Option | undefined;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   selectEndpoint?: string;
   closeAfterConfirm?: boolean;
-  onSuccess?: (selected: "A" | "B") => void;
+  onSuccess?: (selected: SelectedOption) => void;
 }) {
   const [internalOpen, setInternalOpen] = React.useState(false);
-  const [selected, setSelected] = React.useState<"A" | "B" | null>(null);
+  const [selected, setSelected] = React.useState<SelectedOption | null>(null);
   const [loading, setLoading] = React.useState(false);
+
+  const { mutateAsync: selectOption } = useSelectOption();
 
   const isOpen = typeof open === "boolean" ? open : internalOpen;
   const setOpen = (o: boolean) => {
@@ -47,20 +47,15 @@ export function OptionSelectDialog({
   const handleConfirm = async () => {
     if (!selected || loading) return;
     setLoading(true);
+
     try {
-      // const res = await fetch(selectEndpoint, {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ id: contentId, selectedOption: selected }), // ← inclui o ID
-      // });
-      // if (!res.ok) {
-      //   const text = await res.text().catch(() => "");
-      //   throw new Error(text || `HTTP ${res.status}`);
-      // }
+      await selectOption({ id: "", selected });
+
       toast("Option selected!", {
         description: `Option ${selected} saved.`,
       });
       onSuccess?.(selected);
+
       if (closeAfterConfirm) {
         setOpen(false);
         setSelected(null);
@@ -93,20 +88,28 @@ export function OptionSelectDialog({
         </DialogHeader>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <OptionCard
-            optionKey="A"
-            caption={optionA.caption}
-            hashtags={optionA.hashtags}
-            selected={selected === "A"}
-            onSelect={setSelected}
-          />
-          <OptionCard
-            optionKey="B"
-            caption={optionB.caption}
-            hashtags={optionB.hashtags}
-            selected={selected === "B"}
-            onSelect={setSelected}
-          />
+          {optionA !== undefined ? (
+            <OptionCard
+              optionKey={"A"}
+              caption={optionA.caption}
+              hashtags={optionA.hashtags}
+              selected={selected === "A"}
+              onSelect={setSelected}
+            />
+          ) : (
+            <OptionCardSkeleton />
+          )}
+          {optionB !== undefined ? (
+            <OptionCard
+              optionKey={"B"}
+              caption={optionB.caption}
+              hashtags={optionB.hashtags}
+              selected={selected === "B"}
+              onSelect={setSelected}
+            />
+          ) : (
+            <OptionCardSkeleton />
+          )}
         </div>
 
         <DialogFooter className="gap-2 sm:gap-3">

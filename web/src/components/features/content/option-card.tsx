@@ -1,3 +1,5 @@
+import type { SelectedOption } from "@/types/content";
+
 export function OptionCard({
   optionKey,
   caption,
@@ -5,11 +7,11 @@ export function OptionCard({
   selected,
   onSelect,
 }: {
-  optionKey: "A" | "B";
+  optionKey: SelectedOption;
   caption: string;
   hashtags: string[];
   selected: boolean;
-  onSelect: (opt: "A" | "B") => void;
+  onSelect: (opt: SelectedOption) => void;
 }) {
   return (
     <button
@@ -30,7 +32,7 @@ export function OptionCard({
         "transition-transform duration-150 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6EA9]/60",
       ].join(" ")}
     >
-      <div className="rounded-2xl bg-white/95 dark:bg-zinc-900/80 backdrop-blur border border-white/60 dark:border-white/10 p-4 sm:p-5">
+      <div className="h-full rounded-2xl bg-white/95 dark:bg-zinc-900/80 backdrop-blur border border-white/60 dark:border-white/10 p-4 sm:p-5">
         <div className="flex items-start justify-between gap-3">
           <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">
             Option {optionKey}

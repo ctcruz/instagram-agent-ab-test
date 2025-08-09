@@ -20,23 +20,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 import { cn } from "@/lib/utils";
-
-type ContentHistory = {
-  id: string;
-  prompt: string;
-  type: "POST" | "STORY";
-  selectedOption: "A" | "B" | null;
-  optionA: { caption: string; hashtags: string[] };
-  optionB: { caption: string; hashtags: string[] };
-  createdAt: string; // ISO
-};
+import type { Content } from "@/types/content";
 
 interface Props {
-  data: ContentHistory[];
+  data: Content[] | undefined;
 }
 
+const fallbackData: Content[] = [];
+
 export const ContentHistoryTable: React.FC<Props> = ({ data }) => {
-  const columns = useMemo<ColumnDef<ContentHistory>[]>(
+  const columns = useMemo<ColumnDef<Content>[]>(
     () => [
       {
         header: "Type",
@@ -86,7 +79,7 @@ export const ContentHistoryTable: React.FC<Props> = ({ data }) => {
   );
 
   const table = useReactTable({
-    data,
+    data: data ?? fallbackData,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
