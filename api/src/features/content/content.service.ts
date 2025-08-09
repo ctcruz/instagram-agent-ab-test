@@ -7,9 +7,9 @@ import { Content } from './entities/content.entity';
 @Injectable()
 export class ContentService {
   constructor(
-    @Inject('IAIGateway') private readonly ai: IAIGateway,
-    @Inject('IContentRepository') private readonly repo: IContentRepository,
-    @Inject('IPromptOptimizerService')
+    @Inject('AIGateway') private readonly ai: IAIGateway,
+    @Inject('ContentRepository') private readonly repo: IContentRepository,
+    @Inject('PromptOptimizerService')
     private readonly optimizer: PromptOptimizerService,
   ) {}
 

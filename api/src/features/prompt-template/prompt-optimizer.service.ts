@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../infra/prisma/prisma.service';
-// import { IPromptTemplateRepository } from './interfaces/prompt-template.repository.interface';
+import { PromptTemplateInsightDto } from './dtos/insights-response.dto';
+import { IPromptTemplateRepository } from './interfaces/prompt-template.repository.interface';
 
 type Arm = { id: string; name: string; alpha: number; beta: number };
 
@@ -8,10 +9,14 @@ type Arm = { id: string; name: string; alpha: number; beta: number };
 export class PromptOptimizerService {
   private readonly EPSILON = 0.1; // 10% explora
   constructor(
-    // @Inject('IPromptTemplateRepository')
-    // private readonly repo: IPromptTemplateRepository,
+    @Inject('PromptTemplateRepository')
+    private readonly repo: IPromptTemplateRepository,
     private readonly prisma: PrismaService,
   ) {}
+
+  async getPromptTemplateInsights(): Promise<PromptTemplateInsightDto[]> {
+    return this.repo.getPromptTemplateInsights();
+  }
 
   async pickTwo(): Promise<[Arm, Arm]> {
     const arms = await this.prisma.promptTemplate.findMany({
