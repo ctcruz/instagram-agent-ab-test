@@ -1,3 +1,4 @@
+// import { Button } from "@/components/ui/button";
 import type { ColumnDef } from "@tanstack/react-table";
 
 export type ContentHistory = {
@@ -14,25 +15,52 @@ export const columns: ColumnDef<ContentHistory>[] = [
   {
     header: "Prompt",
     accessorKey: "prompt",
+    cell: (info) => `${(info.getValue() as string).substring(0, 30)}...`,
   },
   {
     header: "Type",
     accessorKey: "type",
   },
+  // {
+  //   header: "Hashtags",
+  //   cell: ({ row }) => {
+  //     const isExpanded = expandedRows[row.id];
+  //     const content = row.original;
+
+  //     return (
+  //       <div className="text-xs">
+  //         {isExpanded ? (
+  //           <>
+  //             <strong>A:</strong> {content.optionA.hashtags.join(", ")}
+  //             <br />
+  //             <strong>B:</strong> {content.optionB.hashtags.join(", ")}
+  //           </>
+  //         ) : (
+  //           <span className="text-muted-foreground">Oculto</span>
+  //         )}
+  //         <Button
+  //           variant="link"
+  //           size="sm"
+  //           className="text-xs ml-2 px-1"
+  //           onClick={() =>
+  //             setExpandedRows((prev) => ({
+  //               ...prev,
+  //               [row.id]: !prev[row.id],
+  //             }))
+  //           }
+  //         >
+  //           {isExpanded ? "Ocultar" : "Ver"}
+  //         </Button>
+  //       </div>
+  //     );
+  //   },
+  // },
   {
-    header: "Selected",
-    accessorKey: "selectedOption",
-    cell: (info) => info.getValue() || "—",
-  },
-  {
-    header: "Caption A",
-    accessorFn: (row) => row.optionA.caption,
-    cell: (info) => info.getValue(),
-  },
-  {
-    header: "Caption B",
-    accessorFn: (row) => row.optionB.caption,
-    cell: (info) => info.getValue(),
+    header: "Caption",
+    accessorFn: (row) =>
+      row.selectedOption === "A" ? row.optionA.caption : row.optionB.caption,
+    size: 13,
+    cell: (info) => `${(info.getValue() as string).substring(0, 30)}...`,
   },
   {
     header: "Created At",
