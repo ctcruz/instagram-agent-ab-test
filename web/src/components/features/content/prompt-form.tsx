@@ -3,7 +3,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectTrigger,
@@ -20,8 +19,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { toast } from "sonner";
 
-const schema = z.object({
+const FormSchema = z.object({
   prompt: z
     .string()
     .min(4, "Enter at least 4 characters")
@@ -29,7 +37,7 @@ const schema = z.object({
   type: z.enum(["POST", "STORY"], { required_error: "Select a type" }),
 });
 
-export type PromptFormValues = z.infer<typeof schema>;
+export type PromptFormValues = z.infer<typeof FormSchema>;
 
 export function PromptForm({
   defaultValues = { prompt: "", type: "" },
@@ -40,105 +48,103 @@ export function PromptForm({
   onSubmit: (values: PromptFormValues) => Promise<void> | void;
   submitting?: boolean;
 }) {
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { errors, isSubmitting },
-  } = useForm<PromptFormValues>({
-    resolver: zodResolver(schema),
+  const form = useForm<PromptFormValues>({
+    resolver: zodResolver(FormSchema),
     defaultValues,
     mode: "onChange",
   });
 
-  const type = watch("type");
-  const prompt = watch("prompt") ?? "";
-  const count = prompt.length;
-  const max = 500;
+  function handleSubmit(data: z.infer<typeof FormSchema>) {
+    onSubmit(data);
+    toast("You submitted the following values", {
+      description: (
+        <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
+          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+        </pre>
+      ),
+    });
+  }
 
-  const localSubmitting = submitting || isSubmitting;
+  const localSubmitting = submitting || form.formState.isSubmitting;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-      <Card className="border-1 shadow-none">
-        <CardHeader>
-          <CardTitle className="text-base font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#FF6EA9] via-[#FF4E88] to-[#FD8A44]">
-            Generate Content
-          </CardTitle>
-        </CardHeader>
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(handleSubmit)}
+        className="space-y-4"
+        noValidate
+      >
+        <Card className="border-1 shadow-none">
+          <CardHeader>
+            <CardTitle className="text-base font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#FF6EA9] via-[#FF4E88] to-[#FD8A44]">
+              Generate Content
+            </CardTitle>
+          </CardHeader>
 
-        <CardContent className="space-y-4 pt-0">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="prompt" className="text-sm">
-              Prompt
-            </Label>
-            <span
+          <CardContent className="space-y-4 pt-0">
+            <FormField
+              control={form.control}
+              name="prompt"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Prompt</FormLabel>
+                  <FormControl>
+                    <div className="rounded-2xl p-[2px] bg-gradient-to-br from-[#F8D7E8] via-[#FF6EA9] to-[#FD8A44]">
+                      <div className="rounded-2xl bg-white/95 dark:bg-zinc-900/80 border border-white/60 dark:border-white/10 p-0.5">
+                        <Textarea
+                          id="prompt"
+                          autoFocus
+                          placeholder='Ex.: "Post about summer skincare"'
+                          className="min-h-[35px] resize-y border-none bg-transparent focus-visible:ring-0 text-sm"
+                          maxLength={700}
+                          {...field}
+                        />
+                      </div>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Type</FormLabel>
+                  <FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger className="h-9 rounded-full border-0 bg-zinc-100 dark:bg-zinc-900 focus:ring-0 focus:ring-offset-0">
+                        <SelectValue placeholder="Select a type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="POST">Post</SelectItem>
+                        <SelectItem value="STORY">Story</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+
+          <CardFooter>
+            <Button
+              type="submit"
+              disabled={localSubmitting}
               className={cn(
-                "text-xs",
-                count > max ? "text-red-600" : "text-muted-foreground"
+                "text-white rounded-full px-5 h-10",
+                "bg-gradient-to-r from-[#FF6EA9] via-[#FF4E88] to-[#FD8A44]",
+                "shadow-[0_8px_30px_rgba(255,105,180,0.35)] hover:brightness-105 active:scale-[.98] transition-all"
               )}
             >
-              {count}/{max}
-            </span>
-          </div>
-
-          <div className="rounded-2xl p-[2px] bg-gradient-to-br from-[#F8D7E8] via-[#FF6EA9] to-[#FD8A44]">
-            <div className="rounded-2xl bg-white/95 dark:bg-zinc-900/80 border border-white/60 dark:border-white/10 p-0.5">
-              <Textarea
-                id="prompt"
-                autoFocus
-                placeholder='Ex.: "Post about summer skincare"'
-                className="min-h-[35px] resize-y border-none bg-transparent focus-visible:ring-0 text-sm"
-                maxLength={700}
-                {...register("prompt")}
-              />
-            </div>
-          </div>
-          {errors.prompt && (
-            <p className="text-sm text-red-600 -mt-1">
-              {errors.prompt.message}
-            </p>
-          )}
-
-          <div className="space-y-2">
-            <Label className="text-sm">Content type</Label>
-            <Select
-              value={type}
-              onValueChange={(v) =>
-                setValue("type", v as "POST" | "STORY", {
-                  shouldValidate: true,
-                })
-              }
-            >
-              <SelectTrigger className="h-9 rounded-full border-0 bg-zinc-100 dark:bg-zinc-900 focus:ring-0 focus:ring-offset-0">
-                <SelectValue placeholder="Select a type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="POST">Post</SelectItem>
-                <SelectItem value="STORY">Story</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          {errors.type && (
-            <p className="text-sm text-red-600 -mt-1">{errors.type.message}</p>
-          )}
-        </CardContent>
-
-        <CardFooter>
-          <Button
-            type="submit"
-            disabled={localSubmitting}
-            className={cn(
-              "text-white rounded-full px-5 h-10",
-              "bg-gradient-to-r from-[#FF6EA9] via-[#FF4E88] to-[#FD8A44]",
-              "shadow-[0_8px_30px_rgba(255,105,180,0.35)] hover:brightness-105 active:scale-[.98] transition-all"
-            )}
-          >
-            {localSubmitting ? "Generating…" : "Generate"}
-          </Button>
-        </CardFooter>
-      </Card>
-    </form>
+              {localSubmitting ? "Generating…" : "Generate"}
+            </Button>
+          </CardFooter>
+        </Card>
+      </form>
+    </Form>
   );
 }
