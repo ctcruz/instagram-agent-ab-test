@@ -60,8 +60,8 @@ export function PromptForm({
   const localSubmitting = submitting || isSubmitting;
 
   return (
-    <Card className="border-0 shadow-none">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+      <Card className="border-1 shadow-none">
         <CardHeader>
           <CardTitle className="text-base font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#FF6EA9] via-[#FF4E88] to-[#FD8A44]">
             Generate Content
@@ -138,7 +138,7 @@ export function PromptForm({
             {localSubmitting ? "Generating…" : "Generate"}
           </Button>
         </CardFooter>
-      </form>
-    </Card>
+      </Card>
+    </form>
   );
 }

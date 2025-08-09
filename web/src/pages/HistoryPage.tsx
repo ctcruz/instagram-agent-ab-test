@@ -75,9 +75,8 @@ const HistoryPage = () => {
 
   return (
     <>
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-2xl mx-auto pt-6 gap-4 flex flex-col">
         <PromptForm onSubmit={onSubmit} submitting={submitting} />
-        <Separator />
         <ContentHistoryTable data={data} />
       </div>
 

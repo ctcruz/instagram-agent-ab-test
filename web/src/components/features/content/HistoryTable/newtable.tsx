@@ -94,7 +94,7 @@ export const ContentHistoryTable: React.FC<Props> = ({ data }) => {
   });
 
   return (
-    <Card className="border-0 shadow-none">
+    <Card className="shadow-none">
       <CardHeader>
         <CardTitle className="text-base font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#FF6EA9] via-[#FF4E88] to-[#FD8A44]">
           Content History
