@@ -19,10 +19,11 @@ export function OptionCard({
         (e.key === "Enter" || e.key === " ") && onSelect(optionKey)
       }
       aria-pressed={selected}
-      aria-label={`Selecionar opção ${optionKey}`}
+      aria-label={`Select option ${optionKey}`}
       className={[
         "group relative w-full text-left rounded-2xl p-[2px]",
         "bg-gradient-to-br from-[#F8D7E8] via-[#FF6EA9] to-[#FD8A44]",
+        "cursor-pointer select-none",
         selected
           ? "shadow-[0_8px_30px_rgba(255,105,180,0.35)] scale-[1.01]"
           : "shadow-sm",
@@ -32,7 +33,7 @@ export function OptionCard({
       <div className="rounded-2xl bg-white/95 dark:bg-zinc-900/80 backdrop-blur border border-white/60 dark:border-white/10 p-4 sm:p-5">
         <div className="flex items-start justify-between gap-3">
           <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">
-            Opção {optionKey}
+            Option {optionKey}
           </h3>
           <span
             className={[
@@ -42,7 +43,7 @@ export function OptionCard({
                 : "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300",
             ].join(" ")}
           >
-            {selected ? "Selecionada" : "Selecionar"}
+            {selected ? "Selected" : "Select"}
           </span>
         </div>
 

@@ -24,9 +24,9 @@ import {
 const schema = z.object({
   prompt: z
     .string()
-    .min(4, "Digite pelo menos 4 caracteres")
-    .max(500, "Máx. 500 caracteres"),
-  type: z.enum(["POST", "STORY"], { required_error: "Selecione um tipo" }),
+    .min(4, "Enter at least 4 characters")
+    .max(500, "Max. 500 characters"),
+  type: z.enum(["POST", "STORY"], { required_error: "Select a type" }),
 });
 
 export type PromptFormValues = z.infer<typeof schema>;
@@ -64,7 +64,7 @@ export function PromptForm({
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
         <CardHeader>
           <CardTitle className="text-base font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#FF6EA9] via-[#FF4E88] to-[#FD8A44]">
-            Login to your account
+            Generate Content
           </CardTitle>
         </CardHeader>
 
@@ -88,7 +88,7 @@ export function PromptForm({
               <Textarea
                 id="prompt"
                 autoFocus
-                placeholder='Ex.: "Post sobre skincare no verão"'
+                placeholder='Ex.: "Post about summer skincare"'
                 className="min-h-[35px] resize-y border-none bg-transparent focus-visible:ring-0 text-sm"
                 maxLength={700}
                 {...register("prompt")}
@@ -102,7 +102,7 @@ export function PromptForm({
           )}
 
           <div className="space-y-2">
-            <Label className="text-sm">Tipo de conteúdo</Label>
+            <Label className="text-sm">Content type</Label>
             <Select
               value={type}
               onValueChange={(v) =>
@@ -112,7 +112,7 @@ export function PromptForm({
               }
             >
               <SelectTrigger className="h-9 rounded-full border-0 bg-zinc-100 dark:bg-zinc-900 focus:ring-0 focus:ring-offset-0">
-                <SelectValue placeholder="Selecione um tipo" />
+                <SelectValue placeholder="Select a type" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="POST">Post</SelectItem>
@@ -135,7 +135,7 @@ export function PromptForm({
               "shadow-[0_8px_30px_rgba(255,105,180,0.35)] hover:brightness-105 active:scale-[.98] transition-all"
             )}
           >
-            {localSubmitting ? "Gerando…" : "Gerar variações"}
+            {localSubmitting ? "Generating…" : "Generate"}
           </Button>
         </CardFooter>
       </form>

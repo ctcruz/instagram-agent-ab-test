@@ -27,8 +27,8 @@ const HistoryPage = () => {
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [submitting, setSubmitting] = React.useState(false);
 
-  const optionA = { caption: "Legenda A…", hashtags: ["#summer", "#skincare"] };
-  const optionB = { caption: "Legenda B…", hashtags: ["#sun", "#care"] };
+  const optionA = { caption: "Legend A…", hashtags: ["#summer", "#skincare"] };
+  const optionB = { caption: "Legend B…", hashtags: ["#sun", "#care"] };
 
   useEffect(() => {
     fetch("http://localhost:8080/content/history")
@@ -63,10 +63,10 @@ const HistoryPage = () => {
 
       setGenerated(data);
       setDialogOpen(true);
-      toast("Variações geradas!", { description: "Escolha sua opção." });
+      toast("Generated variations!", { description: "Choose your option." });
     } catch (err: any) {
-      toast("Erro ao gerar", {
-        description: err?.message ?? "Tente novamente.",
+      toast("Error when generating", {
+        description: err?.message ?? "Try again.",
       });
     } finally {
       setSubmitting(false);
@@ -89,8 +89,8 @@ const HistoryPage = () => {
           optionA={generated.optionA}
           optionB={generated.optionB}
           onSuccess={(selected) => {
-            toast("Seleção registrada", {
-              description: `Opção ${selected} salva com sucesso.`,
+            toast("Registered selection", {
+              description: `Option ${selected} saved successfuly.`,
             });
           }}
         />

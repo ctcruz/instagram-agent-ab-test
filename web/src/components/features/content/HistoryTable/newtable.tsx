@@ -39,7 +39,7 @@ export const ContentHistoryTable: React.FC<Props> = ({ data }) => {
   const columns = useMemo<ColumnDef<ContentHistory>[]>(
     () => [
       {
-        header: "Tipo",
+        header: "Type",
         accessorKey: "type",
         cell: ({ getValue }) => {
           const v = getValue() as "POST" | "STORY";
@@ -75,7 +75,7 @@ export const ContentHistoryTable: React.FC<Props> = ({ data }) => {
         cell: ({ getValue }) => <TruncatedText text={getValue() as string} />,
       },
       {
-        header: "Criado em",
+        header: "Created at",
         accessorFn: (row) => new Date(row.createdAt).toLocaleString(),
         cell: ({ getValue }) => (
           <span className="text-xs text-zinc-500">{getValue() as string}</span>
@@ -97,7 +97,7 @@ export const ContentHistoryTable: React.FC<Props> = ({ data }) => {
     <Card className="border-0 shadow-none">
       <CardHeader>
         <CardTitle className="text-base font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#FF6EA9] via-[#FF4E88] to-[#FD8A44]">
-          Histórico de Conteúdo
+          Content History
         </CardTitle>
       </CardHeader>
 
@@ -144,7 +144,7 @@ export const ContentHistoryTable: React.FC<Props> = ({ data }) => {
                     colSpan={columns.length}
                     className="h-24 text-center text-sm text-muted-foreground"
                   >
-                    Nenhum dado encontrado.
+                    No data found.
                   </TableCell>
                 </TableRow>
               )}
@@ -169,9 +169,9 @@ const TruncatedText: React.FC<{ text: string }> = ({ text }) => {
         <button
           type="button"
           onClick={() => setExpanded((s) => !s)}
-          className="ml-1 text-xs bg-clip-text text-transparent bg-gradient-to-r from-[#FF6EA9] via-[#FF4E88] to-[#FD8A44]"
+          className="cursor-pointer ml-1 text-xs bg-clip-text text-transparent bg-gradient-to-r from-[#FF6EA9] via-[#FF4E88] to-[#FD8A44]"
         >
-          {expanded ? "Ver menos" : "Ver mais"}
+          {expanded ? "See less" : "See more"}
         </button>
       )}
     </span>

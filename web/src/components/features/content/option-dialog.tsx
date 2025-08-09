@@ -57,8 +57,8 @@ export function OptionSelectDialog({
       //   const text = await res.text().catch(() => "");
       //   throw new Error(text || `HTTP ${res.status}`);
       // }
-      toast("Variação selecionada!", {
-        description: `Opção ${selected} confirmada.`,
+      toast("Option selected!", {
+        description: `Option ${selected} saved.`,
       });
       onSuccess?.(selected);
       if (closeAfterConfirm) {
@@ -66,8 +66,8 @@ export function OptionSelectDialog({
         setSelected(null);
       }
     } catch (err: any) {
-      toast("Erro ao confirmar", {
-        description: err?.message ?? "Tente novamente",
+      toast("Error when confirming", {
+        description: err?.message ?? "Try again",
       });
     } finally {
       setLoading(false);
@@ -81,14 +81,14 @@ export function OptionSelectDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      {trigger ? <DialogTrigger asChild>{trigger}</DialogTrigger> : null}
-      <DialogContent className="max-w-3xl">
+      <DialogContent className="!max-w-4xl">
         <DialogHeader>
           <DialogTitle className="bg-clip-text text-transparent bg-gradient-to-r from-[#FF6EA9] via-[#FF4E88] to-[#FD8A44]">
-            Escolha sua variação
+            Pick your favorite
           </DialogTitle>
           <DialogDescription>
-            Compare as opções geradas e selecione a que deseja publicar.
+            Compare the generated options and select the one you want to
+            publish.
           </DialogDescription>
         </DialogHeader>
 
@@ -111,8 +111,12 @@ export function OptionSelectDialog({
 
         <DialogFooter className="gap-2 sm:gap-3">
           <DialogClose asChild>
-            <Button variant="outline" disabled={loading}>
-              Cancelar
+            <Button
+              variant="outline"
+              disabled={loading}
+              className="rounded-full"
+            >
+              Cancel
             </Button>
           </DialogClose>
           <Button
@@ -120,7 +124,7 @@ export function OptionSelectDialog({
             onClick={handleConfirm}
             className="text-white rounded-full bg-gradient-to-r from-[#FF6EA9] via-[#FF4E88] to-[#FD8A44] shadow-[0_8px_30px_rgba(255,105,180,0.35)] hover:brightness-105 active:scale-[.98] transition-all"
           >
-            {loading ? "Confirmando…" : "Confirmar escolha"}
+            {loading ? "Confirming…" : "Confirm"}
           </Button>
         </DialogFooter>
       </DialogContent>
