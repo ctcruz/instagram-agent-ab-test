@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { ContentHistoryTable } from "@/components/features/content/HistoryTable/newtable";
 import { OptionSelectDialog } from "@/components/features/content/option-dialog";
 import {
@@ -8,18 +8,14 @@ import {
 import { toast } from "sonner";
 import { useHistory } from "@/hooks/queries/useContents";
 import { useGenerateContent } from "@/hooks/mutations/useGenerateContent";
-import type { OptionResponse } from "@/types/content";
+import type { Content } from "@/types/content";
 
 const HistoryPage = () => {
-  const { data: historyData } = useHistory();
+  const { data: historyData, refetch } = useHistory();
   const { mutateAsync: generateContent } = useGenerateContent();
-  const [generated, setGenerated] = React.useState<OptionResponse | null>(null);
+  const [generated, setGenerated] = React.useState<Content | null>(null);
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [submitting, setSubmitting] = React.useState(false);
-
-  useEffect(() => {
-    console.log("historyData: ", historyData);
-  }, [historyData]);
 
   async function onSubmit(values: PromptFormValues) {
     try {
@@ -32,6 +28,7 @@ const HistoryPage = () => {
       });
 
       setGenerated(generatedContentData);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast("Error when generating", {
         description: err?.message ?? "Try again.",
@@ -47,18 +44,21 @@ const HistoryPage = () => {
         <PromptForm onSubmit={onSubmit} submitting={submitting} />
         <ContentHistoryTable data={historyData} />
       </div>
-
-      <OptionSelectDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        optionA={generated?.optionA}
-        optionB={generated?.optionB}
-        onSuccess={(selected) => {
-          toast("Registered selection", {
-            description: `Option ${selected} saved successfuly.`,
-          });
-        }}
-      />
+      {!!generated && (
+        <OptionSelectDialog
+          open={dialogOpen}
+          contentId={generated?.id}
+          onOpenChange={setDialogOpen}
+          optionA={generated?.optionA}
+          optionB={generated?.optionB}
+          onSuccess={(selected) => {
+            refetch();
+            toast("Registered selection", {
+              description: `Option ${selected} saved successfuly.`,
+            });
+          }}
+        />
+      )}
     </>
   );
 };

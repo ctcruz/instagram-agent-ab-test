@@ -16,6 +16,7 @@ import { type SelectedOption, type Option } from "@/types/content";
 import { useSelectOption } from "@/hooks/mutations/useSelectOption";
 
 export function OptionSelectDialog({
+  contentId,
   optionA,
   optionB,
   open,
@@ -23,6 +24,7 @@ export function OptionSelectDialog({
   closeAfterConfirm = true,
   onSuccess,
 }: {
+  contentId: string;
   trigger?: React.ReactNode;
   optionA: Option | undefined;
   optionB: Option | undefined;
@@ -49,7 +51,7 @@ export function OptionSelectDialog({
     setLoading(true);
 
     try {
-      await selectOption({ id: "", selected });
+      await selectOption({ id: contentId, selected });
 
       toast("Option selected!", {
         description: `Option ${selected} saved.`,
@@ -60,6 +62,7 @@ export function OptionSelectDialog({
         setOpen(false);
         setSelected(null);
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast("Error when confirming", {
         description: err?.message ?? "Try again",

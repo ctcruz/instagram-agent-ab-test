@@ -25,6 +25,8 @@ export type Content = {
   optionB: Option;
   selectedOption: SelectedOption;
   createdAt: Date;
+  templateAId: string;
+  templateBId: string;
 };
 
 export type SelectedOptionDTO = {
