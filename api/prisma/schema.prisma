@@ -14,16 +14,42 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Content {
-  id             String   @id @default(uuid())
-  prompt         String
-  type           String
-  optionACaption String
-  optionAHashtags String[]
-  optionBCaption String
-  optionBHashtags String[]
-  selectedOption String?
-  createdAt      DateTime @default(now())
+model PromptTemplate {
+  id           String   @id @default(cuid())
+  name         String   @unique
+  systemPrompt String
+  alpha        Int      @default(1)
+  beta         Int      @default(1)
+  appearances  Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
+  // 🔁 back-relations nomeadas
+  templateA Content[] @relation("TemplateA")
+  templateB Content[] @relation("TemplateB")
+
+  @@map("prompt_templates")
+}
+
+model Content {
+  id              String   @id @default(uuid())
+  prompt          String
+  type            String
+  optionACaption  String
+  optionAHashtags String[]
+  optionBCaption  String
+  optionBHashtags String[]
+  selectedOption  String?
+  createdAt       DateTime @default(now())
+
+  // 🔗 duas FKs para o mesmo modelo precisam de nomes de relação diferentes
+  templateAId String?
+  templateA   PromptTemplate? @relation("TemplateA", fields: [templateAId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  templateBId String?
+  templateB   PromptTemplate? @relation("TemplateB", fields: [templateBId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  @@index([templateAId])
+  @@index([templateBId])
   @@map("contents")
 }

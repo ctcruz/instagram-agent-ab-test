@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { IContentRepository } from './interfaces/content.repository.interface';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 import { Content } from './entities/content.entity';
+import { PromptTemplate } from 'generated/prisma';
 
 @Injectable()
 export class PrismaContentRepository implements IContentRepository {
@@ -30,8 +31,45 @@ export class PrismaContentRepository implements IContentRepository {
     });
   }
 
+  async findById(id: string): Promise<Content | null> {
+    const content = await this.prisma.content.findUnique({
+      where: { id: id },
+    });
+
+    if (!content) return null;
+
+    return new Content(
+      content.id,
+      content.prompt,
+      content.type as 'POST' | 'STORY',
+      { caption: content.optionACaption, hashtags: content.optionAHashtags },
+      { caption: content.optionBCaption, hashtags: content.optionBHashtags },
+      content.selectedOption as 'A' | 'B' | null,
+      content.createdAt,
+      content.templateAId,
+      content.templateBId,
+    );
+  }
+
+  async getTemplateById(
+    id: string,
+  ): Promise<
+    Pick<PromptTemplate, 'id' | 'systemPrompt' | 'name' | 'alpha' | 'beta'>
+  > {
+    const res = await this.prisma.promptTemplate.findUniqueOrThrow({
+      where: { id },
+      select: {
+        id: true,
+        systemPrompt: true,
+        name: true,
+        alpha: true,
+        beta: true,
+      },
+    });
+    return res;
+  }
+
   async save(content: Omit<Content, 'id' | 'createdAt'>): Promise<Content> {
-    console.log(content.optionA.hashtags);
     const created = await this.prisma.content.create({
       data: {
         prompt: content.prompt,
@@ -41,7 +79,10 @@ export class PrismaContentRepository implements IContentRepository {
         optionBCaption: content.optionB.caption,
         optionBHashtags: content.optionB.hashtags,
         selectedOption: content.selectedOption,
+        templateAId: content.templateAId,
+        templateBId: content.templateBId,
       },
+      include: { templateA: true, templateB: true },
     });
 
     return new Content(
@@ -52,6 +93,8 @@ export class PrismaContentRepository implements IContentRepository {
       { caption: created.optionBCaption, hashtags: created.optionBHashtags },
       created.selectedOption as 'A' | 'B' | null,
       created.createdAt,
+      created.templateAId,
+      created.templateBId,
     );
   }
 }

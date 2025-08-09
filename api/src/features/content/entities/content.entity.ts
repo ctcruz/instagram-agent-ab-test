@@ -8,7 +8,9 @@ export class Content {
     public type: ContentType,
     public optionA: { caption: string; hashtags: string[] },
     public optionB: { caption: string; hashtags: string[] },
-    public selectedOption: SelectedOption,
+    public selectedOption: SelectedOption = null,
     public createdAt: Date,
+    public templateAId: string | null = null,
+    public templateBId: string | null = null,
   ) {}
 }

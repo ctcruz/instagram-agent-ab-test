@@ -4,5 +4,6 @@ export interface IAIGateway {
   generate(
     prompt: string,
     type: ContentType,
+    systemPrompt: string,
   ): Promise<{ caption: string; hashtags: string[] }>;
 }
