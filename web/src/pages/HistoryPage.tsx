@@ -20,13 +20,13 @@ const HistoryPage = () => {
   async function onSubmit(values: PromptFormValues) {
     try {
       setSubmitting(true);
-      setDialogOpen(true);
 
       const { data: generatedContentData } = await generateContent({
         prompt: values.prompt,
         type: values.type,
       });
 
+      setDialogOpen(true);
       setGenerated(generatedContentData);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {

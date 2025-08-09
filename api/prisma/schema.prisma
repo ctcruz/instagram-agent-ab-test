@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -24,7 +24,6 @@ model PromptTemplate {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  // 🔁 back-relations nomeadas
   templateA Content[] @relation("TemplateA")
   templateB Content[] @relation("TemplateB")
 
@@ -42,7 +41,6 @@ model Content {
   selectedOption  String?
   createdAt       DateTime @default(now())
 
-  // 🔗 duas FKs para o mesmo modelo precisam de nomes de relação diferentes
   templateAId String?
   templateA   PromptTemplate? @relation("TemplateA", fields: [templateAId], references: [id], onDelete: SetNull, onUpdate: Cascade)
 

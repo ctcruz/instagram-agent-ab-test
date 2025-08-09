@@ -1,5 +1,5 @@
 import "./App.css";
-import { Container } from "./components/layout/container";
+import { Container } from "./components/ui/container";
 import { Toaster } from "./components/ui/sonner";
 import HistoryPage from "./pages/HistoryPage";
 import { ReactQueryProvider } from "./providers/QueryClientProvider";
