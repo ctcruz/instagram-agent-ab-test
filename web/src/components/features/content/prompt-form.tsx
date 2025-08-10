@@ -11,7 +11,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -34,9 +33,10 @@ const FormSchema = z.object({
     .string()
     .min(4, "Enter at least 4 characters")
     .max(500, "Max. 500 characters"),
-  type: z.enum<ContentType[]>(["POST", "STORY"], {
-    error: "Select a type",
-  }),
+  type: z.enum(
+    ["POST", "STORY"] as [ContentType, ContentType],
+    "Select a type"
+  ),
 });
 
 export type PromptFormValues = z.infer<typeof FormSchema>;
@@ -50,23 +50,20 @@ export function PromptForm({
 }) {
   const form = useForm<PromptFormValues>({
     resolver: zodResolver(FormSchema),
+    defaultValues: { prompt: "", type: "POST" },
     mode: "onChange",
   });
 
-  function handleSubmit(data: z.infer<typeof FormSchema>) {
-    onSubmit(data);
-  }
-
-  const localSubmitting = submitting || form.formState.isSubmitting;
+  const isSubmitting = submitting || form.formState.isSubmitting;
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(handleSubmit)}
+        onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-4"
         noValidate
       >
-        <Card className="border-1 shadow-none">
+        <Card className="shadow-none">
           <CardHeader>
             <CardTitle className="text-base font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#FF6EA9] via-[#FF4E88] to-[#FD8A44]">
               Generate Content
@@ -84,11 +81,9 @@ export function PromptForm({
                     <div className="rounded-2xl p-[2px] bg-gradient-to-br from-[#F8D7E8] via-[#FF6EA9] to-[#FD8A44]">
                       <div className="rounded-2xl bg-white/95 dark:bg-zinc-900/80 border border-white/60 dark:border-white/10 p-0.5">
                         <Textarea
-                          id="prompt"
-                          autoFocus
                           placeholder='Ex.: "Post about summer skincare"'
                           className="min-h-[35px] resize-y border-none bg-transparent focus-visible:ring-0 text-sm"
-                          maxLength={700}
+                          maxLength={500}
                           {...field}
                         />
                       </div>
@@ -123,16 +118,8 @@ export function PromptForm({
           </CardContent>
 
           <CardFooter>
-            <Button
-              type="submit"
-              disabled={localSubmitting}
-              className={cn(
-                "text-white rounded-full px-5 h-10",
-                "bg-gradient-to-r from-[#FF6EA9] via-[#FF4E88] to-[#FD8A44]",
-                "shadow-[0_8px_30px_rgba(255,105,180,0.35)] hover:brightness-105 active:scale-[.98] transition-all"
-              )}
-            >
-              {localSubmitting ? "Generating…" : "Generate"}
+            <Button type="submit" disabled={isSubmitting} variant="ig">
+              {isSubmitting ? "Generating…" : "Generate"}
             </Button>
           </CardFooter>
         </Card>

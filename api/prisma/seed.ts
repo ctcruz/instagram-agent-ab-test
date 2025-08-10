@@ -3,11 +3,9 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main(): Promise<void> {
-  // Apaga dados existentes para não duplicar
   await prisma.content.deleteMany();
   await prisma.promptTemplate.deleteMany();
 
-  // Insere 3 templates de teste
   await prisma.promptTemplate.createMany({
     data: [
       {
@@ -37,13 +35,15 @@ async function main(): Promise<void> {
     ],
   });
 
-  console.log('✅ Seed concluído com sucesso!');
-
-  await prisma.$disconnect();
+  console.log('✅ Seed completed successfully!');
 }
 
-main().catch((e) => {
-  console.error(e);
-  prisma.$disconnect();
-  process.exit(1);
-});
+main()
+  .then(async () => {
+    await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });

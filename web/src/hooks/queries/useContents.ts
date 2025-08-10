@@ -1,12 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { getHistory } from "../../api/endpoints/contentApi";
+import { getHistoryApi } from "@/api/endpoints/content";
+import type { Content } from "@/types/content";
 
-export const useHistory = () => {
-  return useQuery({
-    queryKey: ["history"],
-    queryFn: () => getHistory(),
-    select(data) {
-      return data.data;
-    },
+export function useHistory() {
+  return useQuery<Content[]>({
+    queryKey: ["content", "history"],
+    queryFn: getHistoryApi,
+    staleTime: 30_000,
   });
-};
+}

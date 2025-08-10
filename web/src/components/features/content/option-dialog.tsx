@@ -1,139 +1,95 @@
 import * as React from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-  DialogClose,
-} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { OptionCard } from "./option-card";
 import { toast } from "sonner";
-import { OptionCardSkeleton } from "./OptionCardSkeleton";
-import { type SelectedOption, type Option } from "@/types/content";
+import type { AB, ContentOption } from "@/types/content";
 import { useSelectOption } from "@/hooks/mutations/useSelectOption";
+import { AlertDialog } from "@radix-ui/react-alert-dialog";
+import {
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export function OptionSelectDialog({
   contentId,
   optionA,
   optionB,
-  open,
   onOpenChange,
-  closeAfterConfirm = true,
-  onSuccess,
 }: {
   contentId: string;
-  trigger?: React.ReactNode;
-  optionA: Option | undefined;
-  optionB: Option | undefined;
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
-  selectEndpoint?: string;
-  closeAfterConfirm?: boolean;
-  onSuccess?: (selected: SelectedOption) => void;
+  optionA: ContentOption;
+  optionB: ContentOption;
+  onOpenChange: (open: boolean) => void;
 }) {
-  const [internalOpen, setInternalOpen] = React.useState(false);
-  const [selected, setSelected] = React.useState<SelectedOption | null>(null);
-  const [loading, setLoading] = React.useState(false);
+  const [selected, setSelected] = React.useState<AB | null>(null);
 
-  const { mutateAsync: selectOption } = useSelectOption();
-
-  const isOpen = typeof open === "boolean" ? open : internalOpen;
-  const setOpen = (o: boolean) => {
-    if (typeof open !== "boolean") setInternalOpen(o);
-    onOpenChange?.(o);
-  };
+  const { mutate: selectOption, isPending } = useSelectOption();
 
   const handleConfirm = async () => {
-    if (!selected || loading) return;
-    setLoading(true);
+    if (!selected || isPending) return;
 
     try {
-      await selectOption({ id: contentId, selected });
-
-      toast("Option selected!", {
-        description: `Option ${selected} saved.`,
+      selectOption({ id: contentId, selected });
+      toast.success("All set!", {
+        description: `Your choice lives here now.`,
       });
-      onSuccess?.(selected);
-
-      if (closeAfterConfirm) {
-        setOpen(false);
-        setSelected(null);
-      }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      toast("Error when confirming", {
-        description: err?.message ?? "Try again",
+    } catch {
+      toast.error("Ops! Something went wrong", {
+        description: "Please, try again later.",
       });
     } finally {
-      setLoading(false);
+      handleOpenChange(false);
     }
   };
 
   const handleOpenChange = (o: boolean) => {
     if (!o) setSelected(null);
-    setOpen(o);
+    onOpenChange(o);
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogContent className="!max-w-4xl">
-        <DialogHeader>
-          <DialogTitle className="bg-clip-text text-transparent bg-gradient-to-r from-[#FF6EA9] via-[#FF4E88] to-[#FD8A44]">
+    <AlertDialog defaultOpen>
+      <AlertDialogContent className="!max-w-4xl">
+        <AlertDialogHeader>
+          <AlertDialogTitle className="bg-clip-text text-transparent bg-gradient-to-r from-[#FF6EA9] via-[#FF4E88] to-[#FD8A44]">
             Pick your favorite
-          </DialogTitle>
-          <DialogDescription>
+          </AlertDialogTitle>
+          <AlertDialogDescription>
             Compare the generated options and select the one you want to
             publish.
-          </DialogDescription>
-        </DialogHeader>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {optionA !== undefined ? (
-            <OptionCard
-              optionKey={"A"}
-              caption={optionA.caption}
-              hashtags={optionA.hashtags}
-              selected={selected === "A"}
-              onSelect={setSelected}
-            />
-          ) : (
-            <OptionCardSkeleton />
-          )}
-          {optionB !== undefined ? (
-            <OptionCard
-              optionKey={"B"}
-              caption={optionB.caption}
-              hashtags={optionB.hashtags}
-              selected={selected === "B"}
-              onSelect={setSelected}
-            />
-          ) : (
-            <OptionCardSkeleton />
-          )}
+          <OptionCard
+            optionKey="A"
+            caption={optionA.caption}
+            hashtags={optionA.hashtags}
+            selected={selected === "A"}
+            onSelect={setSelected}
+          />
+          <OptionCard
+            optionKey="B"
+            caption={optionB.caption}
+            hashtags={optionB.hashtags}
+            selected={selected === "B"}
+            onSelect={setSelected}
+          />
         </div>
 
-        <DialogFooter className="gap-2 sm:gap-3">
-          <DialogClose asChild>
-            <Button
-              variant="outline"
-              disabled={loading}
-              className="rounded-full"
-            >
-              Cancel
-            </Button>
-          </DialogClose>
+        <AlertDialogFooter className="gap-2 sm:gap-3">
           <Button
-            disabled={!selected || loading}
+            variant="ig"
+            disabled={!selected || isPending}
             onClick={handleConfirm}
-            className="text-white rounded-full bg-gradient-to-r from-[#FF6EA9] via-[#FF4E88] to-[#FD8A44] shadow-[0_8px_30px_rgba(255,105,180,0.35)] hover:brightness-105 active:scale-[.98] transition-all"
           >
-            {loading ? "Confirming…" : "Confirm"}
+            {isPending ? "Confirming…" : "Confirm"}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }

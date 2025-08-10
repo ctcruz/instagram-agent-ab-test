@@ -1,35 +1,27 @@
 export type ContentType = "POST" | "STORY";
+export type AB = "A" | "B";
 
-export type GenerateContentDTO = {
-  prompt: string;
-  type: ContentType;
-};
-
-export type SelectedOption = "A" | "B";
-
-export type Option = {
+export interface ContentOption {
   caption: string;
   hashtags: string[];
-};
+}
 
-export type OptionResponse = {
-  optionA: Option;
-  optionB: Option;
-};
-
-export type Content = {
+export interface Content {
   id: string;
   prompt: string;
   type: ContentType;
-  optionA: Option;
-  optionB: Option;
-  selectedOption: SelectedOption;
-  createdAt: Date;
-  templateAId: string;
-  templateBId: string;
-};
+  optionA: ContentOption;
+  optionB: ContentOption;
+  selectedOption: AB | null;
+  createdAt: string; // ISO
+}
 
-export type SelectedOptionDTO = {
+export interface GeneratePayload {
+  prompt: string;
+  type: ContentType;
+}
+
+export interface SelectPayload {
   id: string;
-  selected: SelectedOption;
-};
+  selected: AB;
+}
