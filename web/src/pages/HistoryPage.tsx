@@ -32,8 +32,6 @@ const HistoryPage = () => {
     }
   }
 
-  const open = Boolean(generated);
-
   return (
     <>
       <div className="max-w-2xl mx-auto pt-6 gap-4 flex flex-col">
@@ -42,14 +40,10 @@ const HistoryPage = () => {
       </div>
       {generated && (
         <OptionSelectDialog
-          open={open}
           onOpenChange={(o) => !o && setGenerated(null)}
           contentId={generated.id}
           optionA={generated.optionA}
           optionB={generated.optionB}
-          onSuccess={() => {
-            setGenerated(null);
-          }}
         />
       )}
     </>
