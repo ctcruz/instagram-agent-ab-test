@@ -26,6 +26,7 @@ export function OptionCard({
         "bg-gradient-to-br from-[#F8D7E8] via-[#FF6EA9] to-[#FD8A44]",
         "cursor-pointer select-none transition-transform duration-150 ease-out",
         "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6EA9]/60",
+        "hover:shadow-[0_8px_30px_rgba(255,105,180,0.35)] hover:scale-[1.01]",
         selected
           ? "shadow-[0_8px_30px_rgba(255,105,180,0.35)] scale-[1.01]"
           : "shadow-sm"

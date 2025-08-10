@@ -8,10 +8,10 @@ export function generateContentApi(payload: GeneratePayload) {
   });
 }
 
-export function selectOptionApi(payload: SelectPayload) {
-  return http<{ ok: true }>("/content/select", {
-    method: "PUT",
-    body: JSON.stringify(payload),
+export function selectOptionApi({ id, selected }: SelectPayload) {
+  return http<{ ok: true }>(`/content/${id}/select`, {
+    method: "POST",
+    body: JSON.stringify({ selected }),
   });
 }
 

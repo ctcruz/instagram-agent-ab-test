@@ -17,37 +17,30 @@ export function OptionSelectDialog({
   contentId,
   optionA,
   optionB,
-  open,
   onOpenChange,
-  onSuccess,
 }: {
   contentId: string;
   optionA: ContentOption;
   optionB: ContentOption;
-  open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSuccess?: (selected: AB) => void;
 }) {
   const [selected, setSelected] = React.useState<AB | null>(null);
 
-  const { mutateAsync: selectOption, isPending } = useSelectOption();
+  const { mutate: selectOption, isPending } = useSelectOption();
 
   const handleConfirm = async () => {
     if (!selected || isPending) return;
 
     try {
-      await selectOption({ id: contentId, selected });
+      selectOption({ id: contentId, selected });
       toast.success("All set!", {
         description: `Your choice lives here now.`,
       });
-      onSuccess?.(selected);
-    } catch (error: unknown) {
+    } catch {
       toast.error("Ops! Something went wrong", {
         description: "Please, try again later.",
       });
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
-      console.error(errorMessage);
+    } finally {
       handleOpenChange(false);
     }
   };
@@ -58,7 +51,7 @@ export function OptionSelectDialog({
   };
 
   return (
-    <AlertDialog open={open} onOpenChange={handleOpenChange}>
+    <AlertDialog defaultOpen>
       <AlertDialogContent className="!max-w-4xl">
         <AlertDialogHeader>
           <AlertDialogTitle className="bg-clip-text text-transparent bg-gradient-to-r from-[#FF6EA9] via-[#FF4E88] to-[#FD8A44]">

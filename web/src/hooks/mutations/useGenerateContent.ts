@@ -10,7 +10,7 @@ export function useGenerateContent() {
       const data = await generateContentApi(payload);
       return { data };
     },
-    onSuccess: () => {
+    onSettled: () => {
       // Reload history after saving choice
       qc.invalidateQueries({ queryKey: ["content", "history"] });
     },

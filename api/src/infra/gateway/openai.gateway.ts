@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import OpenAI from 'openai';
-import { IAIGateway } from './interfaces/ai.gateway.interface';
-import { ContentType } from './entities/content.entity';
+
+import { ContentType } from '../../domain/entities/content.entity';
+import { IAIGateway } from '../../domain/interfaces/ai.gateway.interface';
 
 @Injectable()
 export class OpenAIGateway implements IAIGateway {

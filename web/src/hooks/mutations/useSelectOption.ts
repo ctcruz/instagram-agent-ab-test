@@ -7,8 +7,7 @@ export function useSelectOption() {
 
   return useMutation<{ ok: true }, Error, SelectPayload>({
     mutationFn: selectOptionApi,
-    onSuccess: () => {
-      // Reload history after saving choice
+    onSettled: () => {
       qc.invalidateQueries({ queryKey: ["content", "history"] });
     },
   });
