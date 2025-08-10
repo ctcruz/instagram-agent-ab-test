@@ -1,18 +1,17 @@
 import * as React from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-  DialogClose,
-} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { OptionCard } from "./option-card";
 import { toast } from "sonner";
 import type { AB, ContentOption } from "@/types/content";
 import { useSelectOption } from "@/hooks/mutations/useSelectOption";
+import { AlertDialog } from "@radix-ui/react-alert-dialog";
+import {
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export function OptionSelectDialog({
   contentId,
@@ -49,6 +48,7 @@ export function OptionSelectDialog({
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       console.error(errorMessage);
+      handleOpenChange(false);
     }
   };
 
@@ -58,17 +58,17 @@ export function OptionSelectDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="!max-w-4xl">
-        <DialogHeader>
-          <DialogTitle className="bg-clip-text text-transparent bg-gradient-to-r from-[#FF6EA9] via-[#FF4E88] to-[#FD8A44]">
+    <AlertDialog open={open} onOpenChange={handleOpenChange}>
+      <AlertDialogContent className="!max-w-4xl">
+        <AlertDialogHeader>
+          <AlertDialogTitle className="bg-clip-text text-transparent bg-gradient-to-r from-[#FF6EA9] via-[#FF4E88] to-[#FD8A44]">
             Pick your favorite
-          </DialogTitle>
-          <DialogDescription>
+          </AlertDialogTitle>
+          <AlertDialogDescription>
             Compare the generated options and select the one you want to
             publish.
-          </DialogDescription>
-        </DialogHeader>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <OptionCard
@@ -87,16 +87,7 @@ export function OptionSelectDialog({
           />
         </div>
 
-        <DialogFooter className="gap-2 sm:gap-3">
-          <DialogClose asChild>
-            <Button
-              variant="outline"
-              disabled={isPending}
-              className="rounded-full"
-            >
-              Cancel
-            </Button>
-          </DialogClose>
+        <AlertDialogFooter className="gap-2 sm:gap-3">
           <Button
             variant="ig"
             disabled={!selected || isPending}
@@ -104,8 +95,8 @@ export function OptionSelectDialog({
           >
             {isPending ? "Confirming…" : "Confirm"}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
