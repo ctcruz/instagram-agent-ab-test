@@ -32,7 +32,7 @@ services:
   - type: web
     runtime: static
     name: ig-agent-web
-    staticPublishPath: ./build/
+    staticPublishPath: ./dist
     rootDir: web
     buildCommand: npm ci && npm run build
     envVars:

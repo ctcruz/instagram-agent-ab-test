@@ -150,17 +150,17 @@ Add them to `.env` as shown above.
 └── 📁api
     └── 📁prisma
     └── 📁src
-        └── 📁features
-            └── 📁content
-                └── 📁dtos
-                └── 📁entities
-                └── 📁interfaces
-            └── 📁prompt-template
-                └── 📁dtos
-                └── 📁entities
-                └── 📁interfaces
+        └── 📁application
+        └── 📁domain
+            └── 📁entities
+            └── 📁interfaces
+        └── 📁dtos
         └── 📁infra
-            └── 📁prisma
+            └── 📁gateway
+            └── 📁http
+            └── 📁persistence
+                └── 📁prisma
+        └── 📁use-cases
 ```
 
 ##### Frontend (React.js)
@@ -172,6 +172,7 @@ Add them to `.env` as shown above.
             └── 📁endpoints
         └── 📁components
             └── 📁features
+            └── layout
             └── 📁ui
         └── 📁contexts
         └── 📁hooks
