@@ -1,7 +1,7 @@
-import { PromptOptimizer } from 'src/features/content/domain/prompt-optimizer';
 import { Inject } from '@nestjs/common';
-import { PromptTemplateInsightDto } from 'src/features/content/dtos/insights-response.dto';
 import { IPromptTemplateRepository } from '../domain/interfaces/prompt-template.repository.interface';
+import { PromptTemplateInsightDto } from 'src/dtos/insights-response.dto';
+import { PromptOptimizer } from 'src/domain/prompt-optimizer';
 
 export class GetInsightsUseCase {
   constructor(

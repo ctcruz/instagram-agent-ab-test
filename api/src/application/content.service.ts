@@ -71,8 +71,9 @@ import { GenerateContentUseCase } from '../use-cases/generate-content.use-case';
 import { SelectContentUseCase } from '../use-cases/select-content.use-case';
 import { IContentRepository } from '../domain/interfaces/content.repository.interface';
 import { Content } from '../domain/entities/content.entity';
-import { PromptTemplateInsightDto } from 'src/features/content/dtos/insights-response.dto';
+
 import { GetInsightsUseCase } from '../use-cases/get-insights.use-case';
+import { PromptTemplateInsightDto } from 'src/dtos/insights-response.dto';
 
 @Injectable()
 export class ContentService {

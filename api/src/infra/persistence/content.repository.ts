@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/features/content/infra/persistence/prisma/prisma.service';
 import { Content } from '../../domain/entities/content.entity';
 import { PromptTemplate } from '../../domain/entities/prompt-template.entity';
 import { IContentRepository } from '../../domain/interfaces/content.repository.interface';
+import { PrismaService } from './prisma/prisma.service';
 
 @Injectable()
 export class PrismaContentRepository implements IContentRepository {

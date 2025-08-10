@@ -1,6 +1,5 @@
-import { PromptTemplateInsightDto } from 'src/features/content/dtos/insights-response.dto';
+import { PromptTemplateInsightDto } from 'src/dtos/insights-response.dto';
 
-// type Arm = { id: string; alpha: number; beta: number };
 type Arm = {
   id: string;
   name: string;
