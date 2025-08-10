@@ -1,4 +1,4 @@
-import { PromptTemplate } from 'src/features/prompt-template/entities/prompt-template.entity';
+import { PromptTemplate } from 'src/features/content/domain/entities/prompt-template.entity';
 import { Content } from '../entities/content.entity';
 
 export interface IContentRepository {

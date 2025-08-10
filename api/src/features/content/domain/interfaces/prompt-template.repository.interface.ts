@@ -1,4 +1,4 @@
-import { PromptTemplateInsightDto } from '../dtos/insights-response.dto';
+import { PromptTemplateInsightDto } from '../../dtos/insights-response.dto';
 import { PromptTemplate } from '../entities/prompt-template.entity';
 
 export interface IPromptTemplateRepository {

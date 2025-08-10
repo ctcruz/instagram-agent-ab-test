@@ -1,4 +1,4 @@
-import { PromptOptimizer } from 'src/features/prompt-template/domain/prompt-optimizer';
+import { PromptOptimizer } from 'src/features/content/domain/prompt-optimizer';
 import { IContentRepository } from '../domain/interfaces/content.repository.interface';
 
 export class SelectContentUseCase {

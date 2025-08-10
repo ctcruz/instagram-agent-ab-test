@@ -21,4 +21,9 @@ export class ContentController {
   history() {
     return this.contentService.history();
   }
+
+  @Get('insights')
+  async insights() {
+    return this.contentService.insights();
+  }
 }

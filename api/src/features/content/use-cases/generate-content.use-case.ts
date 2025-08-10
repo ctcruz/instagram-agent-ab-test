@@ -1,9 +1,9 @@
-import { PromptOptimizer } from 'src/features/prompt-template/domain/prompt-optimizer';
+import { PromptOptimizer } from 'src/features/content/domain/prompt-optimizer';
 import { IAIGateway } from '../domain/interfaces/ai.gateway.interface';
 import { IContentRepository } from '../domain/interfaces/content.repository.interface';
 import { Content } from '../domain/entities/content.entity';
-import { IPromptTemplateRepository } from 'src/features/prompt-template/interfaces/prompt-template.repository.interface';
 import { Inject } from '@nestjs/common';
+import { IPromptTemplateRepository } from '../domain/interfaces/prompt-template.repository.interface';
 
 export class GenerateContentUseCase {
   private readonly optimizer = new PromptOptimizer();

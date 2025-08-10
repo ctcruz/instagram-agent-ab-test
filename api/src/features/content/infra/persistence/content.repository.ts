@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/features/content/infra/persistence/prisma/prisma.service';
 import { Content } from '../../domain/entities/content.entity';
-import { PromptTemplate } from '../../../prompt-template/entities/prompt-template.entity';
+import { PromptTemplate } from '../../domain/entities/prompt-template.entity';
 import { IContentRepository } from '../../domain/interfaces/content.repository.interface';
 
 @Injectable()

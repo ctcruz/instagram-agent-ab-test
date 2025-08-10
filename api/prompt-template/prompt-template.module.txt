@@ -1,10 +1,8 @@
 import { Module } from '@nestjs/common';
 import { PromptOptimizerService } from './prompt-optimizer.service';
-import { PrismaPromptTemplateRepository } from './prompt-template.repository';
-import { PromptTemplateController } from './prompt-template.controller';
+import { PrismaPromptTemplateRepository } from '../src/features/content/infra/persistence/prompt-template.repository';
 
 @Module({
-  controllers: [PromptTemplateController],
   providers: [
     PromptOptimizerService,
     {
