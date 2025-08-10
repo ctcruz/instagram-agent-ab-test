@@ -21,19 +21,21 @@ export class GenerateContentUseCase {
     prompt: string;
     type: 'POST' | 'STORY';
   }): Promise<Content> {
-    // 1. Look for templates (infra)
+    // get the prompt templates that are being analyzed
     const templates = await this.repo.findAll();
 
-    // 2. Choose the best (domain)
+    // choose two “best” templates at the moment
     const [tA, tB] = this.optimizer.pickTwo(templates);
 
-    // 3. Generates content (infra)
+    // generate A/B
     const [optionA, optionB] = await Promise.all([
       this.ai.generate(input.prompt, input.type, tA.systemPrompt),
       this.ai.generate(input.prompt, input.type, tB.systemPrompt),
     ]);
 
-    // 4. Save (infra)
+    // records appearance
+    await this.repo.incrementAppearances([tA.id, tB.id]);
+
     return this.contentRepository.save({
       prompt: input.prompt,
       type: input.type,

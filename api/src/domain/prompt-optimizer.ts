@@ -39,10 +39,4 @@ export class PromptOptimizer {
     if (b.winRate !== a.winRate) return b.winRate - a.winRate;
     return b.appearances - a.appearances;
   }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  recordOutcome(winnerId: string, loserId: string): void {
-    // Lógica de negócio (sem persistência!)
-    // Nota: A persistência real é feita pelo repositório no Use Case
-  }
 }

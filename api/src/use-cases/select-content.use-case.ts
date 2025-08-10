@@ -1,6 +1,7 @@
 import { PromptOptimizer } from 'src/domain/prompt-optimizer';
 import { IContentRepository } from '../domain/interfaces/content.repository.interface';
 import { Inject } from '@nestjs/common';
+import { IPromptTemplateRepository } from 'src/domain/interfaces/prompt-template.repository.interface';
 
 export class SelectContentUseCase {
   private readonly optimizer = new PromptOptimizer();
@@ -8,6 +9,8 @@ export class SelectContentUseCase {
   constructor(
     @Inject('ContentRepository')
     private readonly contentRepository: IContentRepository,
+    @Inject('PromptTemplateRepository')
+    private readonly promptTemplateRepository: IPromptTemplateRepository,
   ) {}
 
   async execute(input: {
@@ -19,17 +22,19 @@ export class SelectContentUseCase {
       throw new Error('Invalid Content');
     }
 
+    // updates content
     await this.contentRepository.updateSelection(
       input.contentId,
       input.selected,
     );
 
+    // winner/loser
     const winner =
       input.selected === 'A' ? content.templateAId : content.templateBId;
     const loser =
       input.selected === 'A' ? content.templateBId : content.templateAId;
 
-    // Calls the domain optimizer directly (doesn't need service)
-    // this.optimizer.recordOutcome(winner, loser); // Simulated method in the domain
+    //
+    await this.promptTemplateRepository.recordOutcome(winner, loser);
   }
 }

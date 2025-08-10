@@ -1,4 +1,3 @@
-import { PromptTemplate } from '@prisma/client';
 import { Content } from '../entities/content.entity';
 
 export interface IContentRepository {
@@ -6,9 +5,4 @@ export interface IContentRepository {
   updateSelection(id: string, selected: 'A' | 'B'): Promise<void>;
   findAll(): Promise<Content[]>;
   findById(id: string): Promise<Content | null>;
-  getTemplateById(
-    id: string,
-  ): Promise<
-    Pick<PromptTemplate, 'id' | 'systemPrompt' | 'name' | 'alpha' | 'beta'>
-  >;
 }

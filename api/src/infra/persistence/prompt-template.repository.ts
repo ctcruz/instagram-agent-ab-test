@@ -14,54 +14,24 @@ export class PrismaPromptTemplateRepository
     return await this.prisma.promptTemplate.findMany();
   }
 
-  async getPromptTemplateInsights() {
-    const rows = await this.prisma.promptTemplate.findMany({
-      select: {
-        id: true,
-        name: true,
-        alpha: true,
-        beta: true,
-        appearances: true,
-      },
-    });
-
-    const insights = rows.map((r) => {
-      const denom = r.alpha + r.beta;
-      const winRate = denom > 0 ? r.alpha / denom : 0;
-      return {
-        id: r.id,
-        name: r.name,
-        alpha: r.alpha,
-        beta: r.beta,
-        appearances: r.appearances,
-        winRate,
-      };
-    });
-
-    // Order by winRate desc, then by appearances desc
-    insights.sort((a, b) => {
-      if (b.winRate !== a.winRate) return b.winRate - a.winRate;
-      return b.appearances - a.appearances;
-    });
-
-    return insights;
+  async recordOutcome(winnerId: string, loserId: string): Promise<void> {
+    // winner: alpha++, appearances++ ; loser: beta++, appearances++
+    await this.prisma.$transaction([
+      this.prisma.promptTemplate.update({
+        where: { id: winnerId },
+        data: { alpha: { increment: 1 }, appearances: { increment: 1 } },
+      }),
+      this.prisma.promptTemplate.update({
+        where: { id: loserId },
+        data: { beta: { increment: 1 }, appearances: { increment: 1 } },
+      }),
+    ]);
   }
 
-  async getTemplateById(
-    id: string,
-  ): Promise<
-    Pick<PromptTemplate, 'id' | 'name' | 'systemPrompt' | 'alpha' | 'beta'>
-  > {
-    const res = await this.prisma.promptTemplate.findUniqueOrThrow({
-      where: { id },
-      select: {
-        id: true,
-        systemPrompt: true,
-        name: true,
-        alpha: true,
-        beta: true,
-      },
+  async incrementAppearances(templateIds: string[]): Promise<void> {
+    await this.prisma.promptTemplate.updateMany({
+      where: { id: { in: templateIds } },
+      data: { appearances: { increment: 1 } },
     });
-    return res;
   }
 }

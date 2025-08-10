@@ -24,7 +24,6 @@ export class ContentController {
     @Param('uuid', new ParseUUIDPipe()) uuid: string,
     @Body() body: SelectedOptionDto,
   ): Promise<void> {
-    // select(@Param('id') id: string, @Body() body: SelectedOptionDto) {
     await this.contentService.select(uuid, body.selected);
   }
 

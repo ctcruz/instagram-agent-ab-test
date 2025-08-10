@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { Content } from '../../domain/entities/content.entity';
-import { PromptTemplate } from '../../domain/entities/prompt-template.entity';
 import { IContentRepository } from '../../domain/interfaces/content.repository.interface';
 import { PrismaService } from './prisma/prisma.service';
 
@@ -49,24 +48,6 @@ export class PrismaContentRepository implements IContentRepository {
       content.templateAId,
       content.templateBId,
     );
-  }
-
-  async getTemplateById(
-    id: string,
-  ): Promise<
-    Pick<PromptTemplate, 'id' | 'systemPrompt' | 'name' | 'alpha' | 'beta'>
-  > {
-    const res = await this.prisma.promptTemplate.findUniqueOrThrow({
-      where: { id },
-      select: {
-        id: true,
-        systemPrompt: true,
-        name: true,
-        alpha: true,
-        beta: true,
-      },
-    });
-    return res;
   }
 
   async save(content: Omit<Content, 'id' | 'createdAt'>): Promise<Content> {
