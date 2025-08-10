@@ -10,8 +10,8 @@ services:
       npm ci
       npm run prisma:generate
       npm run prisma:migrate
-      npm run prisma:seed
       npm run build
+      npm run prisma:seed
     startCommand: npm run start:prod
     envVars:
       - key: NODE_ENV
