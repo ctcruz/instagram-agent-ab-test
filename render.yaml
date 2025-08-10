@@ -10,6 +10,7 @@ services:
       npm ci
       npm run prisma:generate
       npm run prisma:migrate
+      npm run prisma:seed
       npm run build
     startCommand: npm run start:prod
     envVars:
