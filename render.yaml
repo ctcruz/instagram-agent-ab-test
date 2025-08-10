@@ -9,9 +9,8 @@ services:
     buildCommand: |
       npm ci
       npm run prisma:generate
-      npm run prisma:migrate
       npm run build
-      npm run prisma:seed
+    preDeployCommand: npx prisma migrate deploy; npx prisma db seed
     startCommand: npm run start:prod
     envVars:
       - key: NODE_ENV
