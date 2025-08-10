@@ -11,7 +11,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -119,15 +118,7 @@ export function PromptForm({
           </CardContent>
 
           <CardFooter>
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className={cn(
-                "text-white rounded-full px-5 h-10",
-                "bg-gradient-to-r from-[#FF6EA9] via-[#FF4E88] to-[#FD8A44]",
-                "shadow-[0_8px_30px_rgba(255,105,180,0.35)] hover:brightness-105 active:scale-[.98] transition-all"
-              )}
-            >
+            <Button type="submit" disabled={isSubmitting} variant="ig">
               {isSubmitting ? "Generating…" : "Generate"}
             </Button>
           </CardFooter>

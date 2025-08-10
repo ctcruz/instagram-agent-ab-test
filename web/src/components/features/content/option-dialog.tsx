@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { OptionCard } from "./option-card";
 import { toast } from "sonner";
-import { type SelectedOption, type Option } from "@/types/content";
+import type { AB, ContentOption } from "@/types/content";
 import { useSelectOption } from "@/hooks/mutations/useSelectOption";
 
 export function OptionSelectDialog({
@@ -23,13 +23,13 @@ export function OptionSelectDialog({
   onSuccess,
 }: {
   contentId: string;
-  optionA: Option;
-  optionB: Option;
+  optionA: ContentOption;
+  optionB: ContentOption;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSuccess?: (selected: SelectedOption) => void;
+  onSuccess?: (selected: AB) => void;
 }) {
-  const [selected, setSelected] = React.useState<SelectedOption | null>(null);
+  const [selected, setSelected] = React.useState<AB | null>(null);
 
   const { mutateAsync: selectOption, isPending } = useSelectOption();
 
@@ -38,9 +38,8 @@ export function OptionSelectDialog({
 
     try {
       await selectOption({ id: contentId, selected });
-
-      toast("Option selected!", {
-        description: `Option ${selected} saved.`,
+      toast.success("All set!", {
+        description: `Your choice lives here now.`,
       });
       onSuccess?.(selected);
     } catch (error: unknown) {
@@ -99,9 +98,9 @@ export function OptionSelectDialog({
             </Button>
           </DialogClose>
           <Button
+            variant="ig"
             disabled={!selected || isPending}
             onClick={handleConfirm}
-            className="text-white rounded-full bg-gradient-to-r from-[#FF6EA9] via-[#FF4E88] to-[#FD8A44] shadow-[0_8px_30px_rgba(255,105,180,0.35)] hover:brightness-105 active:scale-[.98] transition-all"
           >
             {isPending ? "Confirming…" : "Confirm"}
           </Button>

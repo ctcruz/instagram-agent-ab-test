@@ -1,12 +1,15 @@
-import { useMutation } from "@tanstack/react-query";
-import { selectOption } from "../../api/endpoints/contentApi";
-import type { SelectedOptionDTO } from "@/types/content";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { selectOptionApi } from "@/api/endpoints/content";
+import type { SelectPayload } from "@/types/content";
 
-export const useSelectOption = () => {
-  return useMutation({
-    mutationFn: (data: SelectedOptionDTO) => selectOption(data),
-    onSuccess(data) {
-      return data?.data;
+export function useSelectOption() {
+  const qc = useQueryClient();
+
+  return useMutation<{ ok: true }, Error, SelectPayload>({
+    mutationFn: selectOptionApi,
+    onSuccess: () => {
+      // Reload history after saving choice
+      qc.invalidateQueries({ queryKey: ["content", "history"] });
     },
   });
-};
+}

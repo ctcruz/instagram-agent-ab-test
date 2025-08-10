@@ -1,12 +1,12 @@
 import { cn } from "@/lib/utils";
-import type { SelectedOption } from "@/types/content";
+import type { AB } from "@/types/content";
 
 type OptionCardProps = {
-  optionKey: SelectedOption;
+  optionKey: AB;
   caption: string;
   hashtags: string[];
   selected: boolean;
-  onSelect: (opt: SelectedOption) => void;
+  onSelect: (opt: AB) => void;
 };
 
 export function OptionCard({

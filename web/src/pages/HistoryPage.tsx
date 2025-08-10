@@ -11,7 +11,7 @@ import type { Content } from "@/types/content";
 import { useState } from "react";
 
 const HistoryPage = () => {
-  const { data: historyData, refetch } = useHistory();
+  const { data: historyData } = useHistory();
   const { mutateAsync: generateContent, isPending } = useGenerateContent();
   const [generated, setGenerated] = useState<Content | null>(null);
 
@@ -22,12 +22,11 @@ const HistoryPage = () => {
         type: values.type,
       });
       setGenerated(generatedContentData);
-      refetch();
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       console.error(errorMessage);
-      toast.error("Ops! Something went wrong", {
+      toast.error("Ops! Something went wrong.", {
         description: "Please, try again later.",
       });
     }
@@ -49,10 +48,6 @@ const HistoryPage = () => {
           optionA={generated.optionA}
           optionB={generated.optionB}
           onSuccess={() => {
-            refetch();
-            toast.success("All set!", {
-              description: `Your choice lives here now.`,
-            });
             setGenerated(null);
           }}
         />

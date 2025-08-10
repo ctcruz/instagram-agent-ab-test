@@ -10,7 +10,7 @@ function App() {
       <Container maxWidth="4xl">
         <HistoryPage />
       </Container>
-      <Toaster position="top-center" richColors />
+      <Toaster position="top-center" richColors theme="light" duration={5000} />
     </ReactQueryProvider>
   );
 }
