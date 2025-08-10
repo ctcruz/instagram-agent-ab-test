@@ -37,4 +37,9 @@ export class ContentController {
   async insights() {
     return this.contentService.insights();
   }
+
+  @Get('health')
+  health() {
+    return { ok: true };
+  }
 }
