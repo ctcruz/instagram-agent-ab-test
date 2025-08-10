@@ -7,7 +7,7 @@ type Arm = { id: string; name: string; alpha: number; beta: number };
 
 @Injectable()
 export class PromptOptimizerService {
-  private readonly EPSILON = 0.1; // 10% explora
+  private readonly EPSILON = 0.1; // 10% explore
   constructor(
     @Inject('PromptTemplateRepository')
     private readonly repo: IPromptTemplateRepository,
@@ -25,7 +25,7 @@ export class PromptOptimizerService {
     });
     if (arms.length < 2) throw new Error('Defina ao menos 2 templates');
 
-    // ε-greedy: às vezes aleatório, senão ordena por win-rate
+    // ε-greedy: sometimes random, if not orders win-rate
     const explore = Math.random() < this.EPSILON;
     const sorted = [...arms].sort((a, b) => {
       const wa = a.alpha / (a.alpha + a.beta);
@@ -34,7 +34,7 @@ export class PromptOptimizerService {
     });
 
     const pool = explore ? arms : sorted;
-    // pegue 2 distintos do topo da lista escolhida
+    // Take 2 distinct from the top of the chosen list
     const first = pool[0];
     const second = pool.find((x) => x.id !== first.id)!;
     return [first, second];

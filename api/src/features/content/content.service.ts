@@ -14,26 +14,26 @@ export class ContentService {
   ) {}
 
   async generate(prompt: string, type: 'POST' | 'STORY'): Promise<Content> {
-    // escolhe dois templates “melhores” no momento
+    // choose two “best” templates at the moment
     const [tA, tB] = await this.optimizer.pickTwo();
 
-    // pega os systemPrompts
+    // take the systemPrompts
     const [ptA, ptB] = await Promise.all([
-      // selecione somente o campo necessário
+      // select only the necessary field
       this.repo.getTemplateById(tA.id),
       this.repo.getTemplateById(tB.id),
     ]);
 
-    // gera A/B
+    // generate A/B
     const [optionA, optionB] = await Promise.all([
       this.ai.generate(prompt, type, ptA.systemPrompt),
       this.ai.generate(prompt, type, ptB.systemPrompt),
     ]);
 
-    // registra aparição
+    // records appearance
     await this.optimizer.touchAppearance([tA.id, tB.id]);
 
-    // salva o conteúdo com refs dos templates
+    // save the content with templates Refs
     return this.repo.save({
       prompt,
       type,
@@ -51,7 +51,7 @@ export class ContentService {
       throw new Error('Content not found or missing templates');
     }
 
-    // atualiza conteúdo
+    // updates content
     await this.repo.updateSelection(contentId, selected);
 
     // winner/loser

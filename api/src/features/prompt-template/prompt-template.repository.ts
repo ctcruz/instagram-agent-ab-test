@@ -9,14 +9,6 @@ export class PrismaPromptTemplateRepository
 {
   constructor(private readonly prisma: PrismaService) {}
 
-  // async findMany() {
-  //   const arms = await this.prisma.promptTemplate.findMany({
-  //     select: { id: true, name: true, alpha: true, beta: true },
-  //     orderBy: { createdAt: 'asc' },
-  //   });
-  // return arms;
-  // }
-
   async getPromptTemplateInsights() {
     const rows = await this.prisma.promptTemplate.findMany({
       select: {
@@ -41,7 +33,7 @@ export class PrismaPromptTemplateRepository
       };
     });
 
-    // ordena por winRate desc, depois por appearances desc
+    // Order by winRate desc, then by appearances desc
     insights.sort((a, b) => {
       if (b.winRate !== a.winRate) return b.winRate - a.winRate;
       return b.appearances - a.appearances;
