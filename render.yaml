@@ -1,11 +1,13 @@
 services:
   - type: web
     name: ig-agent-api
-    runtime: node
+    runtime: docker
     rootDir: api
     plan: free
-    buildCommand: npm install && npm run build
-    startCommand: npm run start:prod
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    # buildCommand: npm install && npm run build
+    # startCommand: npm run start:prod
     envVars:
       - key: NODE_ENV
         value: production
