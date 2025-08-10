@@ -1,4 +1,4 @@
-import { PromptTemplate } from 'generated/prisma';
+import { PromptTemplate } from '@prisma/client';
 import { Content } from '../entities/content.entity';
 
 export interface IContentRepository {
