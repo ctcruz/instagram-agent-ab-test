@@ -188,7 +188,7 @@ Add them to `.env` as shown above.
 
 ## 🌐 Deployment
 
-Deployed app link: **[https://your-deployed-app-link.com](https://your-deployed-app-link.com)**
+Deployed app link: **[https://ig-agent-web.onrender.com/](https://ig-agent-web.onrender.com/)**
 
 ---
 

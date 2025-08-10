@@ -4,8 +4,12 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  const origin =
+    process.env.NODE_ENV === 'production' ? [/\.onrender\.com$/] : '*';
+
   app.enableCors({
-    origin: '*', // ou '*', em dev
+    origin,
     credentials: true,
   });
   app.useGlobalPipes(
