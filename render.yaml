@@ -1,10 +1,11 @@
 services:
   - type: web
     name: ig-agent-api
-    runtime: docker
+    runtime: node
     rootDir: api
     plan: free
-    dockerfilePath: ./api/Dockerfile
+    buildCommand: npm ci && npm run build
+    startCommand: ./dist
     envVars:
       - key: NODE_ENV
         value: production
@@ -25,9 +26,9 @@ services:
   - type: web
     runtime: static
     name: ig-agent-web
+    staticPublishPath: ./build/
     rootDir: web
     buildCommand: npm ci && npm run build
-    staticPublishPath: dist
     envVars:
       - key: VITE_API_BASE_URL
         fromService:
