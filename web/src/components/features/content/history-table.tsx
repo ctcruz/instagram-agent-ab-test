@@ -1,10 +1,8 @@
-import React, { useMemo, useState } from "react";
+import { useState } from "react";
 import {
   type ColumnDef,
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 
@@ -22,68 +20,63 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { Content } from "@/types/content";
 
-interface Props {
+interface ContentHistoryTableProps {
   data: Content[] | undefined;
 }
 
-const fallbackData: Content[] = [];
+const columns: ColumnDef<Content>[] = [
+  {
+    header: "Type",
+    accessorKey: "type",
+    cell: ({ getValue }) => {
+      const v = getValue() as "POST" | "STORY";
+      return (
+        <Badge
+          className={cn(
+            "rounded-full px-2 py-0.5 text-xs border-0",
+            v === "POST"
+              ? "bg-gradient-to-r from-[#FF6EA9] via-[#FF4E88] to-[#FD8A44] text-white"
+              : "bg-gradient-to-r from-[#833AB4] via-[#C13584] to-[#FD8A44] text-white"
+          )}
+        >
+          {v}
+        </Badge>
+      );
+    },
+  },
+  {
+    header: "Prompt",
+    accessorKey: "prompt",
+    cell: ({ getValue }) => (
+      <span className="line-clamp-2 text-sm text-zinc-900 dark:text-zinc-100">
+        {getValue() as string}
+      </span>
+    ),
+  },
+  {
+    header: "Caption",
+    accessorFn: (row) =>
+      row.selectedOption === "A" ? row.optionA.caption : row.optionB.caption,
+    cell: ({ getValue }) => <TruncatedText text={getValue() as string} />,
+  },
+  {
+    header: "Created at",
+    accessorKey: "createdAt",
+    cell: ({ getValue }) => (
+      <span className="text-xs text-zinc-500">
+        {new Date(getValue() as string).toLocaleString() as string}
+      </span>
+    ),
+  },
+];
 
-export const ContentHistoryTable: React.FC<Props> = ({ data }) => {
-  const columns = useMemo<ColumnDef<Content>[]>(
-    () => [
-      {
-        header: "Type",
-        accessorKey: "type",
-        cell: ({ getValue }) => {
-          const v = getValue() as "POST" | "STORY";
-          return (
-            <Badge
-              className={cn(
-                "rounded-full px-2 py-0.5 text-xs border-0",
-                v === "POST"
-                  ? "bg-gradient-to-r from-[#FF6EA9] via-[#FF4E88] to-[#FD8A44] text-white"
-                  : "bg-gradient-to-r from-[#833AB4] via-[#C13584] to-[#FD8A44] text-white"
-              )}
-            >
-              {v}
-            </Badge>
-          );
-        },
-      },
-      {
-        header: "Prompt",
-        accessorKey: "prompt",
-        cell: ({ getValue }) => (
-          <span className="line-clamp-2 text-sm text-zinc-900 dark:text-zinc-100">
-            {getValue() as string}
-          </span>
-        ),
-      },
-      {
-        header: "Caption",
-        accessorFn: (row) =>
-          row.selectedOption === "A"
-            ? row.optionA.caption
-            : row.optionB.caption,
-        cell: ({ getValue }) => <TruncatedText text={getValue() as string} />,
-      },
-      {
-        header: "Created at",
-        accessorFn: (row) => new Date(row.createdAt).toLocaleString(),
-        cell: ({ getValue }) => (
-          <span className="text-xs text-zinc-500">{getValue() as string}</span>
-        ),
-      },
-    ],
-    []
-  );
-
+export const ContentHistoryTable: React.FC<ContentHistoryTableProps> = ({
+  data,
+}) => {
   const table = useReactTable({
-    data: data ?? fallbackData,
+    data: data ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
   });
 
   return (
@@ -156,11 +149,12 @@ const TruncatedText: React.FC<{ text: string }> = ({ text }) => {
   const short = text.length > 35 ? text.slice(0, 35) + "…" : text;
 
   return (
-    <span className="text-sm text-justify">
+    <span className="text-sm">
       {expanded ? text : short}
       {text.length > 35 && (
         <button
           type="button"
+          aria-expanded={expanded}
           onClick={() => setExpanded((s) => !s)}
           className="cursor-pointer ml-1 text-xs bg-clip-text text-transparent bg-gradient-to-r from-[#FF6EA9] via-[#FF4E88] to-[#FD8A44]"
         >

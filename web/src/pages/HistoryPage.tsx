@@ -1,5 +1,4 @@
-import React from "react";
-import { ContentHistoryTable } from "@/components/features/content/HistoryTable/newtable";
+import { ContentHistoryTable } from "@/components/features/content/history-table";
 import { OptionSelectDialog } from "@/components/features/content/option-dialog";
 import {
   PromptForm,
@@ -9,53 +8,52 @@ import { toast } from "sonner";
 import { useHistory } from "@/hooks/queries/useContents";
 import { useGenerateContent } from "@/hooks/mutations/useGenerateContent";
 import type { Content } from "@/types/content";
+import { useState } from "react";
 
 const HistoryPage = () => {
   const { data: historyData, refetch } = useHistory();
-  const { mutateAsync: generateContent } = useGenerateContent();
-  const [generated, setGenerated] = React.useState<Content | null>(null);
-  const [dialogOpen, setDialogOpen] = React.useState(false);
-  const [submitting, setSubmitting] = React.useState(false);
+  const { mutateAsync: generateContent, isPending } = useGenerateContent();
+  const [generated, setGenerated] = useState<Content | null>(null);
 
   async function onSubmit(values: PromptFormValues) {
     try {
-      setSubmitting(true);
-
       const { data: generatedContentData } = await generateContent({
         prompt: values.prompt,
         type: values.type,
       });
-
-      setDialogOpen(true);
       setGenerated(generatedContentData);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      toast("Error when generating", {
-        description: err?.message ?? "Try again.",
+      refetch();
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      console.error(errorMessage);
+      toast.error("Ops! Something went wrong", {
+        description: "Please, try again later.",
       });
-    } finally {
-      setSubmitting(false);
     }
   }
+
+  const open = Boolean(generated);
 
   return (
     <>
       <div className="max-w-2xl mx-auto pt-6 gap-4 flex flex-col">
-        <PromptForm onSubmit={onSubmit} submitting={submitting} />
-        <ContentHistoryTable data={historyData} />
+        <PromptForm onSubmit={onSubmit} submitting={isPending} />
+        <ContentHistoryTable data={historyData ?? []} />
       </div>
-      {!!generated && (
+      {generated && (
         <OptionSelectDialog
-          open={dialogOpen}
-          contentId={generated?.id}
-          onOpenChange={setDialogOpen}
-          optionA={generated?.optionA}
-          optionB={generated?.optionB}
-          onSuccess={(selected) => {
+          open={open}
+          onOpenChange={(o) => !o && setGenerated(null)}
+          contentId={generated.id}
+          optionA={generated.optionA}
+          optionB={generated.optionB}
+          onSuccess={() => {
             refetch();
-            toast("Registered selection", {
-              description: `Option ${selected} saved successfuly.`,
+            toast.success("All set!", {
+              description: `Your choice lives here now.`,
             });
+            setGenerated(null);
           }}
         />
       )}
