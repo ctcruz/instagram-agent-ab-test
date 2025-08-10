@@ -135,10 +135,10 @@ Add them to `.env` as shown above.
 
 | Method | Endpoint                    | Description                                   |
 | ------ | --------------------------- | --------------------------------------------- |
-| POST   | `/content/generate`         | Generate two AI content options (A/B)         |
-| PUT    | `/content/select`           | Select preferred option for a generated entry |
-| GET    | `/content/history`          | Get history of generated content              |
-| GET    | `/prompt-template/insights` | Get prompt template performance stats         |
+| POST   | `/api/content/generate`         | Generate two AI content options (A/B)         |
+| POST    | `/api/content/{uuid}/select`           | Select preferred option for a generated entry |
+| GET    | `/api/content/history`          | Get history of generated content              |
+| GET    | `/api/content/insights` | Get prompt template performance stats         |
 
 ---
 
