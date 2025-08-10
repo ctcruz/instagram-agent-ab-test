@@ -1,4 +1,4 @@
-import { ContentType, SelectedOption } from '../entities/content.entity';
+import { ContentType, SelectedOption } from '../domain/entities/content.entity';
 
 export class HistoryItemDto {
   id: string;

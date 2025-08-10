@@ -1,29 +1,25 @@
 import { Module } from '@nestjs/common';
-import { ContentController } from './content.controller';
-import { ContentService } from './content.service';
-import { PrismaContentRepository } from './content.repository';
-import { OpenAIGateway } from './ai.gateway';
-import { PromptOptimizerService } from '../prompt-template/prompt-optimizer.service';
+import { ContentController } from './infra/http/content.controller';
+import { ContentService } from './application/content.service';
+import { PrismaContentRepository } from './infra/persistence/content.repository';
+import { GenerateContentUseCase } from './use-cases/generate-content.use-case';
+import { SelectContentUseCase } from './use-cases/select-content.use-case';
 import { PrismaPromptTemplateRepository } from '../prompt-template/prompt-template.repository';
+import { OpenAIGateway } from './infra/gateway/open-ai.gateway';
 
 @Module({
   controllers: [ContentController],
   providers: [
     ContentService,
-    PromptOptimizerService,
-    PrismaContentRepository,
-    OpenAIGateway,
-    {
-      provide: 'ContentRepository',
-      useClass: PrismaContentRepository,
-    },
+    GenerateContentUseCase,
+    SelectContentUseCase,
     {
       provide: 'PromptTemplateRepository',
       useClass: PrismaPromptTemplateRepository,
     },
     {
-      provide: 'PromptOptimizerService',
-      useClass: PromptOptimizerService,
+      provide: 'ContentRepository',
+      useClass: PrismaContentRepository,
     },
     {
       provide: 'AIGateway',

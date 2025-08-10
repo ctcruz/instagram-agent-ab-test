@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { PrismaService } from '../../infra/prisma/prisma.service';
+import { PrismaService } from '../content/infra/persistence/prisma/prisma.service';
 import { PromptTemplateInsightDto } from './dtos/insights-response.dto';
 import { IPromptTemplateRepository } from './interfaces/prompt-template.repository.interface';
 
@@ -9,7 +9,7 @@ type Arm = { id: string; name: string; alpha: number; beta: number };
 export class PromptOptimizerService {
   private readonly EPSILON = 0.1; // 10% explore
   constructor(
-    @Inject('PromptTemplateRepository')
+    @Inject('IPromptTemplateRepository')
     private readonly repo: IPromptTemplateRepository,
     private readonly prisma: PrismaService,
   ) {}

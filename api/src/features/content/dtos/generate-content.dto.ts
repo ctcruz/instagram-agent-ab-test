@@ -1,5 +1,5 @@
 import { IsString, IsNotEmpty, IsEnum } from 'class-validator';
-import { ContentType } from '../entities/content.entity';
+import { ContentType } from '../domain/entities/content.entity';
 
 export class GenerateContentDto {
   @IsString()

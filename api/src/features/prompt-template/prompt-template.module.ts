@@ -7,12 +7,11 @@ import { PromptTemplateController } from './prompt-template.controller';
   controllers: [PromptTemplateController],
   providers: [
     PromptOptimizerService,
-    PrismaPromptTemplateRepository,
     {
-      provide: 'PromptTemplateRepository',
+      provide: 'IPromptTemplateRepository',
       useClass: PrismaPromptTemplateRepository,
     },
   ],
-  exports: [PromptOptimizerService],
+  exports: ['IPromptTemplateRepository'],
 })
 export class PromptTemplateModule {}

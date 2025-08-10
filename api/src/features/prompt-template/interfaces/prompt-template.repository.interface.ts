@@ -8,4 +8,5 @@ export interface IPromptTemplateRepository {
     Pick<PromptTemplate, 'id' | 'name' | 'systemPrompt' | 'alpha' | 'beta'>
   >;
   getPromptTemplateInsights(): Promise<PromptTemplateInsightDto[]>;
+  findAll(): Promise<PromptTemplate[]>;
 }
