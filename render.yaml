@@ -7,10 +7,11 @@ services:
     # dockerfilePath: ./Dockerfile
     # dockerContext: .
     buildCommand: |
-      npm ci
-      npm run prisma:generate
+      npm ci --include=dev 
+      npx prisma generate
+      npx prisma migrate deploy
+      npx prisma db seed
       npm run build
-    preDeployCommand: npx prisma migrate deploy; npx prisma db seed
     startCommand: npm run start:prod
     envVars:
       - key: NODE_ENV
